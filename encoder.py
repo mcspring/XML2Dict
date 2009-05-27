@@ -1,6 +1,16 @@
-"""XML2Dict: Convert xml file to python dict """
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+'''
+XML2Dict: Convert xml string to python dict
 
-import re
+@author: Mc.Spring
+@contact: Heresy.Mc@gmail.com
+@since: Created on 2009-5-18
+@todo: Add namespace support
+@copyright: Copyright (C) 2009 MC.Spring Team. All rights reserved.
+@license: http://www.apache.org/licenses/LICENSE-2.0 Apache License
+'''
+
 try:
     import xml.etree.ElementTree as ET
 except:
@@ -10,62 +20,68 @@ __all__ = ['XML2Dict']
 
 class XML2Dict(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, coding = 'UTF-8'):
+        self._coding = coding
 
     def _parse_node(self, node):
         
         # tree dict
         tree = dict()
-
-        # Save attributes
-        for k, v in node.attrib.items():
-            tree.update(self._make_dict(k, v))
         
         #Save childrens
         for child in node.getchildren():
             ctag = child.tag
+            cattri = child.attrib
             ctree = self._parse_node(child)
+            
             if ctree == {}:
-                #Save value
-                cdict = self._make_dict(ctag, child.text.strip())
+                cdict = self._make_dict(ctag, child.text.encode(self._coding).strip(), cattri)
             else:
-                cdict = self._make_dict(ctag, ctree)
+                cdict = self._make_dict(ctag, ctree, cattri)
 
             if ctag not in tree: # First time found
                 tree.update(cdict)
                 continue
 
-            old = tree[ctag]
-            if not isinstance(old, list):
-                tree[ctag] = [old] # Multi entries, change to list
+            tmp = tree[ctag]
+            if not isinstance(tmp, list):
+                tree[ctag] = [tmp] # Multi entries, change to list
 
             tree[ctag].append(ctree) # Add new entry
 
         return  tree
 
-    def _make_dict(self, tag, value):
+    def _make_dict(self, tag, value, attri = None):
         """Generate a new dict with tag and value
         
-        If tag is like '{http://cs.sfsu.edu/csc867/myscheduler}patients',
-        split it first to: http://cs.sfsu.edu/csc867/myscheduler, patients
+        If attri is True then convert tag name to @tag
+        and convert tuple list to dict
         """
-        result = re.compile("\{(.*)\}(.*)").search(tag)
-        if result:
-            ns, tag = result.groups() # We have a namespace!
+        ret = {tag: value}
+        
+        # Save attributes as @tag value
+        if attri:
+            tmp = '@' + tag
             
-            return {tag: value, ns: ns}
+            adict = {}
+            for k, v in attri.items():
+                adict[k] = v
+            
+            ret[tmp] = adict
+            
+            del tmp
+            del adict
         
-        return {tag: value}
+        return ret
 
-    def fromstring(self, s):
+    def parse(self, xml):
         """Parse xml string to dict"""
-        tmp = ET.fromstring(s)
+        EL = ET.fromstring(xml)
         
-        return self._make_dict(tmp.tag, self._parse_node(tmp))
+        return self._make_dict(EL.tag, self._parse_node(EL), EL.attrib)
 
 if __name__ == '__main__':
-    s = """<rss version="2.0"> 
+    s = """<rss version="2.0" author="Mc.Spring"> 
 <channel> 
 <title><![CDATA[Twinsen Liang]]></title> 
 <link>http://www.twinsenliang.net</link> 
@@ -75,16 +91,16 @@ if __name__ == '__main__':
 <webMaster><![CDATA[twinsenliang@gmail.com(twinsen)]]></webMaster> 
 <generator>TXmlSave 2.0</generator> 
 <image> 
-    <title>Twinsen Liang</title> 
-    <url>http://www.twinsenliang.net/logo.gif</url> 
-    <link>http://www.twinsenliang.net/</link> 
-    <description>Twinsen Liang</description> 
+	<title>Twinsen Liang</title> 
+	<url>http://www.twinsenliang.net/logo.gif</url> 
+	<link>http://www.twinsenliang.net/</link> 
+	<description>Twinsen Liang</description> 
 </image> 
 <item> 
  
-	<link>http://www.twinsenliang.net/skill/20090413.html</link> 
+	<link target="_blank">http://www.twinsenliang.net/skill/20090413.html</link> 
  
-	<title><![CDATA[this is the first title]]></title> 
+	<title><![CDATA[This is the first article title]]></title> 
  
 	<author><![CDATA[twinsenliang@gmail.com(TwinsenLiang)]]></author> 
  
@@ -94,30 +110,32 @@ if __name__ == '__main__':
  
 	<guid>http://www.twinsenliang.net/skill/20090413.html</guid> 
  
-	<description><![CDATA[this is the first content]]></description> 
+	<description><![CDATA[This is the first article content, thanks!]]></description> 
  
-</item> 
- 
+</item>
 <item> 
  
-	<link>http://www.twinsenliang.net/skill/20090409.html</link> 
+    <link target="_blank">http://www.twinsenliang.net/skill/20090414.html</link> 
  
-	<title><![CDATA[this is the second title]]></title> 
+    <title><![CDATA[This is the second article title]]></title> 
  
-	<author><![CDATA[twinsenliang@gmail.com(TwinsenLiang)]]></author> 
+    <author><![CDATA[twinsenliang@gmail.com(TwinsenLiang)]]></author> 
  
-	<category><![CDATA[skill]]></category> 
+    <category><![CDATA[skill]]></category> 
  
-	<pubDate>Thu, 09 Apr 2009 09:43:20 +0800</pubDate> 
+    <pubDate>Mon, 15 Apr 2009 02:04:52 +0800</pubDate> 
  
-	<guid>http://www.twinsenliang.net/skill/20090409.html</guid> 
+    <guid>http://www.twinsenliang.net/skill/20090414.html</guid> 
  
-	<description><![CDATA[this is the second content]]></description> 
+    <description><![CDATA[This is the second article content, thanks!]]></description> 
  
-</item> 
+</item>
 </channel>
 </rss>"""
 
-    xml = XML2Dict()
-    rs = xml.fromstring(s)
+	
+    obj = XML2Dict(coding = 'gb2312')
+
+    rs = obj.parse(s)
+
     print(rs)

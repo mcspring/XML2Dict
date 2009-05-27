@@ -1,19 +1,31 @@
 '''
-Created on 2009-5-18
+XML2Dict: Convert xml and python dict
 
-@author: Administrator
+@since: Created on 2009-5-18
+@author: Mc.Spring
+@contact: Heresy.Mc@gmail.com
+@copyright: Copyright (C) 2009 MC.Spring Team. All rights reserved.
+@license: http://www.apache.org/licenses/LICENSE-2.0 Apache License
 '''
+
 __version__ = '0.1.0'
 __all__ = [
-    'parsestring', 'XML2Dict',
+    'parsexml', 'parsedict',
+    'XML2Dict', 'Dict2XML',
 ]
 
 __author__ = 'Mc.Spring <Heresy.Mc@gmail.com>'
 
 from encoder import XML2Dict
 
-def parsestring(s, cls = None):
+def parsexml(s, cls = None):
     if cls is None:
         cls = XML2Dict
 
-    return cls().fromstring(s)
+    return cls().parse(s)
+
+def parsedict(d, cls = None):
+    if cls is None:
+        cls = Dict2XML
+        
+    return cls().parse(d)
