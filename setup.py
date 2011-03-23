@@ -3,7 +3,7 @@
 
 from distutils.core import setup
 
-setup(name='XMl2Dict',
+setup(name='XML2Dict',
     version='0.1',
     author='Spring Mc',
     author_email='Heresy.Mc@gmail.com',
