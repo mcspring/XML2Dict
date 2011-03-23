@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
+
 '''
 XML2Dict: Convert xml string to python dict
 
@@ -16,7 +17,9 @@ try:
 except:
     import cElementTree as ET # for 2.4
 
+
 __all__ = ['XML2Dict']
+
 
 class XML2Dict(object):
 
@@ -24,118 +27,122 @@ class XML2Dict(object):
         self._coding = coding
 
     def _parse_node(self, node):
-        
-        # tree dict
-        tree = dict()
-        
+        tree = {}
+
         #Save childrens
         for child in node.getchildren():
             ctag = child.tag
-            cattri = child.attrib
+            cattr = child.attrib
             ctree = self._parse_node(child)
-            
-            if ctree == {}:
-                cdict = self._make_dict(ctag, child.text.encode(self._coding).strip(), cattri)
+
+            if not ctree:
+                cdict = self._make_dict(ctag, child.text.strip().encode(self._coding), cattr)
             else:
-                cdict = self._make_dict(ctag, ctree, cattri)
+                cdict = self._make_dict(ctag, ctree, cattr)
 
             if ctag not in tree: # First time found
                 tree.update(cdict)
                 continue
 
-            tmp = tree[ctag]
-            if not isinstance(tmp, list):
-                tree[ctag] = [tmp] # Multi entries, change to list
+            atag = '@' + ctag
+            atree = tree[ctag]
+            if not isinstance(atree, list):
+                if atag in tree:
+                    atree['#'+ctag] = tree[atag]
+                    del tree[atag]
 
-            tree[ctag].append(ctree) # Add new entry
+                tree[ctag] = [atree] # Multi entries, change to list
+
+            if cattr:
+                ctree['#'+ctag] = cattr
+
+            tree[ctag].append(ctree)
 
         return  tree
 
-    def _make_dict(self, tag, value, attri = None):
-        """Generate a new dict with tag and value
+    def _make_dict(self, tag, value, attr = None):
+        '''Generate a new dict with tag and value
         
-        If attri is True then convert tag name to @tag
+        If attr is True then convert tag name to @tag
         and convert tuple list to dict
-        """
+        '''
         ret = {tag: value}
-        
+
         # Save attributes as @tag value
-        if attri:
-            tmp = '@' + tag
-            
-            adict = {}
-            for k, v in attri.items():
-                adict[k] = v
-            
-            ret[tmp] = adict
-            
-            del tmp
-            del adict
-        
+        if attr:
+            atag = '@' + tag
+
+            aattr = {}
+            for k, v in attr.items():
+                aattr[k] = v
+
+            ret[atag] = aattr
+
+            del atag
+            del aattr
+
         return ret
 
     def parse(self, xml):
-        """Parse xml string to dict"""
-        EL = ET.fromstring(xml)
+        '''Parse xml string to python dict
         
+        '''
+        EL = ET.fromstring(xml)
+
         return self._make_dict(EL.tag, self._parse_node(EL), EL.attrib)
 
+
+
 if __name__ == '__main__':
-    s = """<rss version="2.0" author="Mc.Spring"> 
-<channel> 
-<title><![CDATA[Twinsen Liang]]></title> 
-<link>http://www.twinsenliang.net</link> 
-<description><![CDATA[je m' appelle twinsen.]]></description> 
-<language>zh-cn</language> 
-<copyright><![CDATA[Copyright 2000-2009 Twinsen Liang all rights reserved]]></copyright> 
-<webMaster><![CDATA[twinsenliang@gmail.com(twinsen)]]></webMaster> 
-<generator>TXmlSave 2.0</generator> 
-<image> 
-	<title>Twinsen Liang</title> 
-	<url>http://www.twinsenliang.net/logo.gif</url> 
-	<link>http://www.twinsenliang.net/</link> 
-	<description>Twinsen Liang</description> 
-</image> 
-<item> 
- 
-	<link target="_blank">http://www.twinsenliang.net/skill/20090413.html</link> 
- 
-	<title><![CDATA[This is the first article title]]></title> 
- 
-	<author><![CDATA[twinsenliang@gmail.com(TwinsenLiang)]]></author> 
- 
-	<category><![CDATA[skill]]></category> 
- 
-	<pubDate>Mon, 13 Apr 2009 02:04:52 +0800</pubDate> 
- 
-	<guid>http://www.twinsenliang.net/skill/20090413.html</guid> 
- 
-	<description><![CDATA[This is the first article content, thanks!]]></description> 
- 
-</item>
-<item> 
- 
-    <link target="_blank">http://www.twinsenliang.net/skill/20090414.html</link> 
- 
-    <title><![CDATA[This is the second article title]]></title> 
- 
-    <author><![CDATA[twinsenliang@gmail.com(TwinsenLiang)]]></author> 
- 
-    <category><![CDATA[skill]]></category> 
- 
-    <pubDate>Mon, 15 Apr 2009 02:04:52 +0800</pubDate> 
- 
-    <guid>http://www.twinsenliang.net/skill/20090414.html</guid> 
- 
-    <description><![CDATA[This is the second article content, thanks!]]></description> 
- 
-</item>
-</channel>
-</rss>"""
+    test = {'one': '''<rss author="Mc.Spring" version="2.0">
+    <channel>
+        <description>je m' appelle twinsen.</description>
+        <copyright>Copyright 2000-2009 Twinsen Liang all rights reserved</copyright>
+        <title>Twinsen Liang</title>
+        <language>zh-cn</language>
+        <image>
+            <url>http://www.twinsenliang.net/logo.gif</url>
+            <link>http://www.twinsenliang.net/</link>
+            <description>Twinsen Liang</description>
+            <title>Twinsen Liang</title>
+        </image>
+        <generator>TXmlSave 2.0</generator>
+        <item>
+            <category>skill</category>
+            <description>This is the second article content, thanks!</description>
+            <pubDate>Mon, 15 Apr 200902:04:52 +0800</pubDate>
+            <author>twinsenliang@gmail.com(TwinsenLiang)</author>
+            <title>This is the second article title</title>
+            <link target="_blank">http://www.twinsenliang.net/skill/20090414.html</link>
+            <guid>http://www.twinsenliang.net/skill/20090414.html</guid>
+        </item>
+        <item>
+            <category>skill</category>
+            <description>This isthe second article content, thanks!</description>
+            <pubDate>Mon, 15 Apr 2009 02:04:52 +0800</pubDate>
+            <author>twinsenliang@gmail.com(TwinsenLiang)</author>
+            <title>This is the second article title</title>
+            <link target="_blank">http://www.twinsenliang.net/skill/20090414.html</link>
+            <guid>http://www.twinsenliang.net/skill/20090414.html</guid>
+        </item>
+        <link>http://www.twinsenliang.net</link>
+        <webMaster>twinsenliang@gmail.com(twinsen)</webMaster>
+    </channel>
+</rss>''',
+            'two': '''<class id="test">
+    <student id="1234">
+        <age>24</age>
+        <name>thiru</name>
+    </student>
+    <student id="5678">
+        <age>28</age>
+        <name>bharath</name>
+    </student>
+</class>''',
+            'three': '''<class id="test"></class>'''}
 
-	
-    obj = XML2Dict(coding = 'gb2312')
-
-    rs = obj.parse(s)
-
-    print(rs)
+    for item in test:
+        obj = XML2Dict(coding='utf-8')
+        
+        print(obj.parse(test[item]))
+        print

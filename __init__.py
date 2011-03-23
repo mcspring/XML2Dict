@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 '''
 XML2Dict: Convert xml and python dict
 
@@ -16,7 +19,10 @@ __all__ = [
 
 __author__ = 'Mc.Spring <Heresy.Mc@gmail.com>'
 
+
 from encoder import XML2Dict
+from decoder import Dict2XML
+
 
 def parsexml(s, cls = None):
     if cls is None:
@@ -24,8 +30,9 @@ def parsexml(s, cls = None):
 
     return cls().parse(s)
 
+
 def parsedict(d, cls = None):
     if cls is None:
         cls = Dict2XML
-        
+
     return cls().parse(d)
