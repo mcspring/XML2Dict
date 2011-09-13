@@ -33,10 +33,14 @@ class XML2Dict(object):
         for child in node.getchildren():
             ctag = child.tag
             cattr = child.attrib
+            ctext = child.text
             ctree = self._parse_node(child)
 
+            if ctext:
+                ctext = ctext.strip().encode(self._coding)
+
             if not ctree:
-                cdict = self._make_dict(ctag, child.text.strip().encode(self._coding), cattr)
+                cdict = self._make_dict(ctag, ctext, cattr)
             else:
                 cdict = self._make_dict(ctag, ctree, cattr)
 
@@ -139,7 +143,12 @@ if __name__ == '__main__':
         <name>bharath</name>
     </student>
 </class>''',
-            'three': '''<class id="test"></class>'''}
+            'three': '''<class id="test"></class>''',
+            'four': '''<person>
+    <name>spring</name>
+    <age></age>
+    <address />
+</person>'''}
 
     for item in test:
         obj = XML2Dict(coding='utf-8')

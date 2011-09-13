@@ -16,6 +16,9 @@ Please see source test case
 
 XML2Dict do not test for all cases now, if you find any bug please issue an report.
 
+## Thanks
+Fixed parse error when tag has empty content [snwilhelm](https://gist.github.com/1209773)
+
 
 ## About
 
