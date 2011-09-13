@@ -33,11 +33,8 @@ class XML2Dict(object):
         for child in node.getchildren():
             ctag = child.tag
             cattr = child.attrib
-            ctext = child.text
+            ctext = child.text.strip().encode(self._coding) if child.text is not None else ''
             ctree = self._parse_node(child)
-
-            if ctext:
-                ctext = ctext.strip().encode(self._coding)
 
             if not ctree:
                 cdict = self._make_dict(ctag, ctext, cattr)

@@ -127,7 +127,8 @@ if __name__ == '__main__':
                                                    {'category': 'skill', 'guid': 'https://github.com/mcspring/XML2Dict', 'link': 'https://github.com/mcspring/XML2Dict', '@link':{'target': '_blank'}, 'pubDate': 'Mon, 15 Apr 2009 02:04:52 +0800', 'author': 'Heresy.Mc@gmail.com(Spring Mc)', 'title': 'This is XML2Dict project', 'description': 'This is the first project written in python, thanks!'}], 
                                           'image': {'url': 'https://github.com/mcspring/logo.gif', 'link': 'https://github.com/mcspring/', 'description': 'Spring Mc', 'title': 'Spring on github'}, 
                                           'generator': 'XmlSave 2.0', 
-                                          'webMaster': 'Heresy.Mc@gmail.com(Spring)'}}}
+                                          'webMaster': 'Heresy.Mc@gmail.com(Spring)'}}},
+            'four': {'person': {'age': '', 'name': 'spring', 'address': ''}}
             }
     
     for item in test:
