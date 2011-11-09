@@ -4,10 +4,10 @@
 from distutils.core import setup
 
 setup(name='XML2Dict',
-    version='0.1',
+    version='0.2.0',
     author='Spring Mc',
     author_email='Heresy.Mc@gmail.com',
-    packages=['encoder', 'decoder'],
+    py_modules=['encoder', 'decoder'],
     url='https://github.com/mcspring/XML2Dict',
     license='http://www.apache.org/licenses/LICENSE-2.0.html',
     description='Convert between XML String and Python Dict',
