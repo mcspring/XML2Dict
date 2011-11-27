@@ -23,7 +23,7 @@ __all__ = ['XML2Dict']
 
 class XML2Dict(object):
 
-    def __init__(self, coding = 'UTF-8'):
+    def __init__(self, coding='UTF-8'):
         self._coding = coding
 
     def _parse_node(self, node):
@@ -48,6 +48,9 @@ class XML2Dict(object):
             atag = '@' + ctag
             atree = tree[ctag]
             if not isinstance(atree, list):
+                if not isinstance(atree, dict):
+                    atree = {}
+
                 if atag in tree:
                     atree['#'+ctag] = tree[atag]
                     del tree[atag]
@@ -61,10 +64,10 @@ class XML2Dict(object):
 
         return  tree
 
-    def _make_dict(self, tag, value, attr = None):
+    def _make_dict(self, tag, value, attr=None):
         '''Generate a new dict with tag and value
         
-        If attr is True then convert tag name to @tag
+        If attr is not None then convert tag name to @tag
         and convert tuple list to dict
         '''
         ret = {tag: value}
@@ -145,7 +148,11 @@ if __name__ == '__main__':
     <name>spring</name>
     <age></age>
     <address />
-</person>'''}
+</person>''',
+            'five': '''<doc>
+    <x a="1" />
+    <x a="2" />
+</doc>'''}
 
     for item in test:
         obj = XML2Dict(coding='utf-8')

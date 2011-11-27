@@ -128,7 +128,8 @@ if __name__ == '__main__':
                                           'image': {'url': 'https://github.com/mcspring/logo.gif', 'link': 'https://github.com/mcspring/', 'description': 'Spring Mc', 'title': 'Spring on github'}, 
                                           'generator': 'XmlSave 2.0', 
                                           'webMaster': 'Heresy.Mc@gmail.com(Spring)'}}},
-            'four': {'person': {'age': '', 'name': 'spring', 'address': ''}}
+            'four': {'person': {'age': '', 'name': 'spring', 'address': ''}},
+            'five': {'doc': {'x': [{'#x': {'a': '1'}}, {'#x': {'a': '2'}}]}}
             }
     
     for item in test:
