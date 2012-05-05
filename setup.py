@@ -4,7 +4,7 @@
 from distutils.core import setup
 
 setup(name='XML2Dict',
-    version='0.2.1',
+    version='0.2.2',
     author='Spring Mc',
     author_email='Heresy.Mc@gmail.com',
     py_modules=['encoder', 'decoder'],
