@@ -10,7 +10,7 @@ XML2Dict: Convert xml and python dict
 @license: http://www.apache.org/licenses/LICENSE-2.0 Apache License
 '''
 
-__version__ = '0.2.1'
+__version__ = '0.2.2'
 __all__ = [
     'parsexml', 'parsedict',
     'XML2Dict', 'Dict2XML',
