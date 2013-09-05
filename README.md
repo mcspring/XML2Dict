@@ -17,9 +17,11 @@ Please see source test case
 XML2Dict do not test for all cases now, if you find any bug please issue an report.
 
 ## Thanks
-Fixed parse error when tag has empty content [snwilhelm](https://gist.github.com/1209773)
+Fix parse error when tag has empty content [snwilhelm](https://gist.github.com/1209773)
 
 Fix MANIFEST.in syntax to avoid creating broken distributions; bump version to 0.2.2 [slinkp](https://github.com/mcspring/XML2Dict/pull/2)
+
+Add custom coding support to `parsexml(s, cls, coding)` [yaodianmi](https://github.com/yaodianmi)
 
 
 ## About
