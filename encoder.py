@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-
+# encoding: utf-8
 '''
 XML2Dict: Convert xml string to python dict
 
@@ -66,7 +65,7 @@ class XML2Dict(object):
 
     def _make_dict(self, tag, value, attr=None):
         '''Generate a new dict with tag and value
-        
+
         If attr is not None then convert tag name to @tag
         and convert tuple list to dict
         '''
@@ -89,7 +88,7 @@ class XML2Dict(object):
 
     def parse(self, xml):
         '''Parse xml string to python dict
-        
+
         '''
         EL = ET.fromstring(xml)
 
@@ -156,6 +155,6 @@ if __name__ == '__main__':
 
     for item in test:
         obj = XML2Dict(coding='utf-8')
-        
+
         print(obj.parse(test[item]))
         print
