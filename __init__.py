@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-
 '''
 XML2Dict: Convert xml and python dict
 
@@ -24,14 +23,14 @@ from encoder import XML2Dict
 from decoder import Dict2XML
 
 
-def parsexml(s, cls = None):
+def parsexml(s, cls=None, coding=None):
     if cls is None:
         cls = XML2Dict
 
-    return cls().parse(s)
+    return cls(coding).parse(s) if coding else cls().parse(s)
 
 
-def parsedict(d, cls = None):
+def parsedict(d, cls=None):
     if cls is None:
         cls = Dict2XML
 
