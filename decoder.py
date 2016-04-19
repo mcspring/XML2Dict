@@ -28,6 +28,9 @@ class Dict2XML(object):
         tree = None
 
         for tag, value in edict.items():
+            if not isinstance(value, dict) and not isinstance(value, list):
+                value = str(value)
+
             if etree is not None and isinstance(value, list):
                 # children nodes
                 elist = [self._parse_dict({tag: item}) for item in value]
@@ -40,9 +43,7 @@ class Dict2XML(object):
             elif etree is None and '@'==tag[:1]:
                 # tree's attributes
                 etree = tree
-
             tree = self._make_xml(tag, value, etree)
-
         return tree
 
     def _make_xml(self, tag, value, parent):
@@ -113,8 +114,8 @@ class Dict2XML(object):
 
 if __name__ == '__main__':
     test = {'one': {'@class': {'id': 'test'}},
-            'two': {'class': {'student': [{'age': '24', '#student': 'type', 'name': 'thiru'},
-                                          {'age': '28', '#student': {'id': '5678'}, 'name': 'bharath'}]},
+            'two': {'class': {'student': [{'age': 24, '#student': 'type', 'name': 'thiru'},
+                                          {'age': 28, '#student': {'id': '5678'}, 'name': 'bharath'}], 'bool': True},
                     '@class': {'id': 'test'}},
             'three': {'@rss': {'version': '2.0', 'author': 'Mc.Spring'},
                       'rss': {'channel': {'language': 'en-us',
